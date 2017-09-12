@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Clients;
+use App\Comics;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Redirect;
@@ -17,9 +18,11 @@ class ClientController extends Controller
      */
     public function index()
     {
-        $clients = Clients::withTrashed()->paginate(10);
-        
-        return view('clients.index', compact('clients'));
+        $clients       = Clients::paginate(10);
+        $comics        = Comics::select('id', 'title')->get();
+        $clientToComic = [];
+
+        return view('clients.index', compact('clients', 'clientToComic', 'comics'));
     }
     
     /**
@@ -100,6 +103,21 @@ class ClientController extends Controller
             ->withInput()
             ->withErrors($validation)
             ->with('message', 'There were validation errors.');
+    }
+
+
+    /**
+     * Links the specified resource in storage to another resource in storage.
+     *
+     * @param  int $clientId
+     * @param  int $comicId
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function attach($clientId, $comicId)
+    {
+
+        return Redirect::route('clients.index')->with('success', 'Client '.$clientId.'and comic linked '.$comicId);
     }
     
     /**

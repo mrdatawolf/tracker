@@ -21,6 +21,15 @@ class Comics extends Model
      */
     public function clients()
     {
-        return $this->belongsToMany('App\Clients');
+        return $this->belongsToMany('Clients');
+    }
+
+
+    /**
+     * The clients that belong to the comic.
+     */
+    public function groups()
+    {
+        return $this->belongsToMany('Groups');
     }
 }

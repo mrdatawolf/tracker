@@ -78,6 +78,7 @@
             font-weight: 300;
         }
     </style>
+    @yield('style')
 </head>
 <body>
 <div class="flex-center position-ref full-height">
@@ -85,11 +86,11 @@
         <a href="{{ url('/') }}">Home</a>
         <a href="{{ url('/clients') }}">Clients</a>
         <a href="{{ url('/comics') }}">Comic Manager</a>
-        <a href="{{ url('/watchlists') }}">Watchlists</a>
+    <!--<a href="{{ url('/watchlists') }}">Watchlists</a>
         <a href="{{ url('/orders') }}">Orders</a>
-        <a href="{{ url('/notes') }}">Notes</a>
+        <a href="{{ url('/notes') }}">Notes</a>-->
         <a href="{{ url('/groups') }}">Groups</a>
-        <a href="{{ url('/chart1') }}">Chart 1</a>
+        <a href="{{ url('/comic_count') }}">Comic Counts</a>
     </div>
     <div class="container">
         @if (Session::has('message'))
@@ -97,20 +98,21 @@
                 <p>{{ Session::get('message') }}</p>
             </div>
         @endif
+        @if (\Session::has('success'))
+            <div class="alert alert-success">
+                <p>{{ \Session::get('success') }}</p>
+            </div><br/>
+        @endif
+        @if (\Session::has('error'))
+            <div class="alert alert-error">
+                <p>{{ \Session::get('error') }}</p>
+            </div><br/>
+        @endif
 
         @yield('main')
     </div>
 </div>
-@if (\Session::has('success'))
-    <div class="alert alert-success">
-        <p>{{ \Session::get('success') }}</p>
-    </div><br/>
-@endif
-@if (\Session::has('error'))
-    <div class="alert alert-error">
-        <p>{{ \Session::get('error') }}</p>
-    </div><br/>
-@endif
+
 @yield('scriptFooter')
 </body>
 

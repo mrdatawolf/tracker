@@ -7,3 +7,10 @@
     ?>
     @include('layouts.allTable')
 @stop
+@section('style')
+    <style>
+        html, body {
+            background-color: lightcoral;
+        }
+    </style>
+@endsection

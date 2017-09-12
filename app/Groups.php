@@ -14,5 +14,29 @@ class Groups extends Model
      * @var array
      */
     protected $dates = ['deleted_at', 'updated_at', 'created_at'];
+
+
+    public function tags()
+    {
+        return $this->belongsToMany('Tag');
+    }
+
+
+    /**
+     * The clients that belong to the comic.
+     */
+    public function comics()
+    {
+        return $this->belongsToMany('Comics');
+    }
+
+
+    /**
+     * The clients that belong to the comic.
+     */
+    public function clients()
+    {
+        return $this->belongsToMany('Clients');
+    }
     
 }

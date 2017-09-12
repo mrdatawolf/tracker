@@ -13,8 +13,8 @@ class Clients extends Model
      * @var array
      */
     public static $rules = array(
-        'name' => 'required|min:5',
-        'email' => 'required|email'
+        'name'  => 'required|min:5',
+        'email' => 'email'
     );
     /**
      * @var array
@@ -36,6 +36,6 @@ class Clients extends Model
      */
     public function comics()
     {
-        return $this->belongsToMany('App\Comics');
+        return $this->belongsToMany('Comics');
     }
 }
