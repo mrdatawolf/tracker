@@ -70,6 +70,7 @@
         }
 
         function getUserInfo() {
+
             console.log('Get user info from db for ' + clientName);
         }
 

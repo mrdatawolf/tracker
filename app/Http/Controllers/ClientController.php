@@ -107,17 +107,30 @@ class ClientController extends Controller
 
 
     /**
-     * Links the specified resource in storage to another resource in storage.
+     * Attaches the specified resource in storage to another resource in storage.
      *
-     * @param  int $clientId
+     * @param Request $request
+     * @param int $clientId
      * @param  int $comicId
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function attach($clientId, $comicId)
+    public function put(Request $request, $clientId, $comicId)
     {
-
-        return Redirect::route('clients.index')->with('success', 'Client '.$clientId.'and comic linked '.$comicId);
+        $client = Clients::whereId($clientId)->first();
+        $attachedIds = $client->comics()->whereId($comicId)->count();
+        switch ($attachedIds) {
+            case 0:
+                $client->comics()->attach([$comicId]);
+                $type = 'success';
+                $message = 'Comic was successfully attached to client!';
+                break;
+            default:
+                $type = 'error';
+                $message = 'Comic was already attached to client!';
+        }
+    
+        return Redirect::route('clients.index')->with($type, $message);
     }
     
     /**
@@ -129,7 +142,6 @@ class ClientController extends Controller
     public function destroy($id)
     {
         Clients::withTrashed()->find($id)->delete();
-        return Redirect::route('clients.index')
-            ->with('success', 'Client was deleted');
+        return Redirect::route('clients.index')->with('success', 'Client was deleted');
     }
 }

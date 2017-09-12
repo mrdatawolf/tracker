@@ -72,7 +72,9 @@ $headersToShow = ['id', 'name', 'barcode'];
                                 @endif
                             </td>
                             <td>
-                                <label for="comicSelectFor{{ $client->id }}"><i class="fa fa-paperclip fa-1x" data-client="{{  $client->id }}" aria-hidden="true"></i></label>
+                                <label for="comicSelectFor{{ $client->id }}"><i class="fa fa-paperclip fa-2x"
+                                                                                data-client="{{  $client->id }}"
+                                                                                aria-hidden="true"></i></label>
                                 <select id="comicSelectFor{{ $client->id }}" class="comicSelector">
                                     <option value='0' data-client="{{  $client->id }}">
                                         &nbsp;
@@ -118,22 +120,7 @@ $headersToShow = ['id', 'name', 'barcode'];
                     $('#addComicTo' + clientId).attr("disabled", "disabled").hide();
                 }
                 else {
-                    console.log(comicId + ' attaching to  ' + clientId);
-                    // Assign handlers immediately after making the request,
-                    // and remember the jqxhr object for this request
-                    var jqxhr = $.post("tracker.app/clients/attach/" + clientId + "/" + comicId, function () {
-                        alert("success");
-                    })
-                                 .done(function () {
-                                     alert("second success");
-                                 })
-                                 .fail(function () {
-                                     alert("error");
-                                 })
-                                 .always(function () {
-                                     alert("finished");
-                                 });
-
+                    $(location).attr('href', '/clients/attach/' + clientId + '/' + comicId);
                 }
             });
         });

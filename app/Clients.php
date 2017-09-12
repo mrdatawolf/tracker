@@ -12,18 +12,21 @@ class Clients extends Model
     /**
      * @var array
      */
-    public static $rules = array(
+    public static $rules = [
         'name'  => 'required|min:5',
         'email' => 'email'
-    );
+    ];
+    
     /**
      * @var array
      */
     protected $guarded = ['id'];
+    
     /**
      * @var array
      */
     protected $fillable = ['barcode', 'name', 'email', 'phone', 'other'];
+    
     /**
      * The attributes that should be mutated to dates.
      *
@@ -36,6 +39,6 @@ class Clients extends Model
      */
     public function comics()
     {
-        return $this->belongsToMany('Comics');
+        return $this->belongsToMany('App\Comics');
     }
 }

@@ -13,6 +13,7 @@
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <!-- Styles -->
     <style>
         html, body {
@@ -74,6 +75,23 @@
             list-style-type: none;
         }
 
+        #home_image {
+            max-height: 2em;
+            max-width: 3em;
+        }
+
+        th, td {
+            text-align: center;
+        }
+
+        .alert-error {
+            background-color: red;
+        }
+
+        .alert-success {
+            background-color: lawngreen;
+        }
+
         .trashed {
             font-weight: 300;
         }
@@ -83,14 +101,14 @@
 <body>
 <div class="flex-center position-ref full-height">
     <div class="top-right links">
-        <a href="{{ url('/') }}">Home</a>
-        <a href="{{ url('/clients') }}">Clients</a>
-        <a href="{{ url('/comics') }}">Comic Manager</a>
-    <!--<a href="{{ url('/watchlists') }}">Watchlists</a>
+        <a href="{{ url('/') }}"><img id="home_image" src="/images/ncrp.jpg"></a>
+        <a href="{{ url('/clients') }}"><i class="fa fa-users" aria-hidden="true"></i></a>
+        <a href="{{ url('/comics') }}"><i class="fa fa-book" aria-hidden="true"></i></a>
+    <!--<a href="{{ url('/watchlists') }}"><i class="fa fa-binoculars" aria-hidden="true"></i></a>
         <a href="{{ url('/orders') }}">Orders</a>
         <a href="{{ url('/notes') }}">Notes</a>-->
-        <a href="{{ url('/groups') }}">Groups</a>
-        <a href="{{ url('/comic_count') }}">Comic Counts</a>
+        <a href="{{ url('/groups') }}"><i class="fa fa-exchange" aria-hidden="true"></i></a>
+        <a href="{{ url('/comic_count') }}"><i class="fa fa-line-chart" aria-hidden="true"></i></a>
     </div>
     <div class="container">
         @if (Session::has('message'))

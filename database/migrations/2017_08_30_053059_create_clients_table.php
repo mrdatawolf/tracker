@@ -15,14 +15,14 @@ class CreateClientsTable extends Migration
     {
         Schema::create('clients', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedBigInteger('barcode')->nullable();
             $table->string('name');
-            $table->string('email')->unique();
-            $table->string('phone');
-            $table->string('other');
+            $table->unsignedBigInteger('barcode')->nullable();
+            $table->string('email')->default(NULL)->nullable();
+            $table->string('phone')->default(NULL)->nullable();
+            $table->string('other')->default(NULL)->nullable();
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP'));
-            $table->timestamp('deleted_at')->default(NULL)->nullable();
+            $table->softDeletes();
         });
         
     }

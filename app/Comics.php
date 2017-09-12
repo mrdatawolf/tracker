@@ -10,6 +10,21 @@ class Comics extends Model
     use SoftDeletes;
     
     /**
+     * @var array
+     */
+    public static $rules = [];
+    
+    /**
+     * @var array
+     */
+    protected $guarded = ['id'];
+    
+    /**
+     * @var array
+     */
+    protected $fillable = ['barcode', 'title', 'number', 'notes'];
+    
+    /**
      * The attributes that should be mutated to dates.
      *
      * @var array
@@ -21,7 +36,7 @@ class Comics extends Model
      */
     public function clients()
     {
-        return $this->belongsToMany('Clients');
+        return $this->belongsToMany('App\Clients');
     }
 
 
@@ -30,6 +45,6 @@ class Comics extends Model
      */
     public function groups()
     {
-        return $this->belongsToMany('Groups');
+        return $this->belongsToMany('App\Groups');
     }
 }

@@ -18,7 +18,7 @@ class CreateComicsTable extends Migration
             $table->unsignedBigInteger('barcode')->nullable();
             $table->string('title');
             $table->integer('number');
-            $table->string('notes');
+            $table->string('notes')->default(NULL)->nullable();
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->softDeletes();
