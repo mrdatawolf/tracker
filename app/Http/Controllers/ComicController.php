@@ -6,6 +6,7 @@ use App\Clients;
 use App\ClientsComicsTotals;
 use App\Comics;
 use Illuminate\Http\Request;
+use Illuminate\Routing\RouteUrlGenerator;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
@@ -103,8 +104,8 @@ class ComicController extends Controller
     public function destroy($id)
     {
         Comics::withTrashed()->find($id)->delete();
-
-        return Redirect::route('comics.index')->with('success', 'Comic was deleted');
+    
+        return redirect()->back()->with('success', 'Comic was deleted');
     }
 
     /**
@@ -147,7 +148,7 @@ class ComicController extends Controller
             $data[$key]['subList'] = '';
             $subList               = '';
             foreach ($comic['clients'] as $client) {
-                $subList .= $client['name'].', ';
+                $subList .= '<a href=comics/detach/' . $comic['id'] . '/' . $client['id'] . '>' . $client['name'] . '</a>, ';
             }
             $data[$key]['subList'] .= substr($subList, 0, -2);
         }

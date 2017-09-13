@@ -14,80 +14,52 @@ $headersToShow = ['id', 'name', 'barcode'];
                 @if($collNum === 0)
                     <thead>
                     <tr>
-                        @php
-                            foreach($client->toArray() as $header => $value){
-                                if( in_array($header,$headersToShow)){
-                                    switch($header){
-                                        case 'barcode' :
-                                        $header = '<i class="fa fa-barcode fa-2x" aria-hidden="true"></i>';
-                                        break;
-                                        case 'name' :
-                                        $header = '<i class="fa fa-user fa-2x" aria-hidden="true"></i>';
-                                        break;
-                                        case 'email':
-                                        $header = '<i class="fa fa-envelope fa-2x" aria-hidden="true"></i>';
-                                        break;
-                                        case 'phone':
-                                        $header = '<i class="fa fa-phone fa-2x" aria-hidden="true"></i>';
-                                        break;
-                                    }
-                                    echo '<th>'.$header.'</th>';
-                                }
-                            }
-                        @endphp
-                        <th colspan="3">Tools</th>
+                        <th><i class="fa fa-barcode fa-2x" aria-hidden="true"></i></th>
+                        <th><i class="fa fa-user fa-2x" aria-hidden="true"></i></th>
+                        <th class="tools" colspan="2"><i class="fa fa-wrench fa-2x" aria-hidden="true"></i></th>
                     </tr>
                     </thead>
                     <tfoot>
                     <tr>
-                        <td colspan="{{ count($headersToShow)+3 }}">
+                        <td colspan="4">
                             {{ $clients->links() }}
                         </td>
                     </tr>
                     </tfoot>
                     <tbody>
                     @endif
+                    <tr>
+                        <td>{{ $client->barcode }}</td>
+                        <td>{{ $client->name }}
+                            {{ link_to_route('clients.edit', 'Edit', array($client->id), array('class' => 'btn btn-info')) }}
+                        </td>
 
-                    @if($client->trashed())
-                        <tr class="trashed">
-                    @else
-                        <tr>
-                            @endif
-                            @foreach($client->toArray() as $header => $value)
-                                @if( in_array($header,$headersToShow))
-                                    <td>{{ $value }}</td>
-                                @endif
-                            @endforeach
-
-                            <td>{{ link_to_route('clients.edit', 'Edit', array($client->id), array('class' => 'btn btn-info')) }}</td>
-                            <td>
-                                @if($client->trashed())
-                                    {{ Form::open(array('method' => 'RESTORE', 'route' => array('clients.update', $client->id))) }}
-                                    {{ Form::submit('Restore', array('class' => 'btn')) }}
-                                    {{ Form::close() }}
-                                @else
-                                    {{ Form::open(array('method' => 'DELETE', 'route' => array('clients.destroy', $client->id))) }}
-                                    {{ Form::submit('Delete', array('class' => 'btn btn-danger')) }}
-                                    {{ Form::close() }}
-                                @endif
-                            </td>
-                            <td>
-                                <label for="comicSelectFor{{ $client->id }}"><i class="fa fa-paperclip fa-2x"
-                                                                                data-client="{{  $client->id }}"
-                                                                                aria-hidden="true"></i></label>
-                                <select id="comicSelectFor{{ $client->id }}" class="comicSelector">
-                                    <option value='0' data-client="{{  $client->id }}">
-                                        &nbsp;
+                        <td>
+                            <label for="comicSelectFor{{ $client->id }}">
+                                <i class="fa fa-paperclip fa-2x" data-client="{{  $client->id }}"
+                                   aria-hidden="true"></i>
+                            </label>
+                            <select id="comicSelectFor{{ $client->id }}" class="comicSelector">
+                                <option value='0' data-client="{{  $client->id }}">
+                                    &nbsp;
+                                </option>
+                                @foreach($comics as $comic)
+                                    <option value='{{ $comic->id }}' data-client="{{  $client->id }}">
+                                        {{ $comic->title }}
                                     </option>
-                                    @foreach($comics as $comic)
-                                        <option value='{{ $comic->id }}' data-client="{{  $client->id }}">
-                                            {{ $comic->title }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </td>
-                        </tr>
-                        @endforeach
+                                @endforeach
+                            </select>
+                        </td>
+                        <td>
+                            @if($client->trashed())
+                                {{ link_to_route('clients.update', 'Restore', array($client->id), array('class' => 'btn btn-info')) }}
+                            @else
+                                {{ Form::open(['method' => 'DELETE', 'route' => array('clients.destroy', $client->id)]) }}
+                                {{ Form::submit('Delete', array('class' => 'btn btn-danger')) }}
+                                {{ Form::close() }}
+                            @endif
+                        </td>
+                    @endforeach
                     </tbody>
         </table>
     @else

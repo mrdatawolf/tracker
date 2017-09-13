@@ -14,69 +14,25 @@ $headersToShow = ['id', 'title', 'number', 'barcode'];
                 @if($collNum === 0)
                     <thead>
                     <tr>
-                        @php
-                            foreach($comic->toArray() as $header => $value){
-                                if( in_array($header,$headersToShow)){
-                                    switch($header){
-                                        case 'barcode' :
-                                        $header = '<i class="fa fa-barcode fa-2x" aria-hidden="true"></i>';
-                                        break;
-                                        case 'name' :
-                                        $header = '<i class="fa fa-user fa-2x" aria-hidden="true"></i>';
-                                        break;
-                                        case 'title' :
-                                        $header = '<i class="fa fa-book fa-2x" aria-hidden="true"></i>';
-                                        break;
-                                        case 'email':
-                                        $header = '<i class="fa fa-envelope fa-2x" aria-hidden="true"></i>';
-                                        break;
-                                        case 'phone':
-                                        $header = '<i class="fa fa-phone fa-2x" aria-hidden="true"></i>';
-                                        break;
-                                        case 'number':
-                                        $header = '<i class="fa fa-bookmark fa-2x" aria-hidden="true"></i>';
-                                        break;
-                                    }
-                                    echo '<th>'.$header.'</th>';
-                                }
-                            }
-                        @endphp
-                        <th class="tools" colspan="3"><i class="fa fa-wrench fa-2x" aria-hidden="true"></i></th>
+                        <th><i class="fa fa-barcode fa-2x" aria-hidden="true"></i></th>
+                        <th><i class="fa fa-book fa-2x" aria-hidden="true"></i></th>
+                        <th><i class="fa fa-bookmark fa-2x" aria-hidden="true"></i></th>
+                        <th class="tools" colspan="2"><i class="fa fa-wrench fa-2x" aria-hidden="true"></i></th>
                     </tr>
                     </thead>
                     <tfoot>
                     <tr>
-                        <td colspan="{{ count($headersToShow)+3 }}">
+                        <td colspan="4">
                             {{ $comics->links() }}
                         </td>
                     </tr>
                     </tfoot>
                     <tbody>
                     @endif
-
-                    @if($comic->trashed())
-                        <tr class="trashed">
-                    @else
                         <tr>
-                            @endif
-                            @foreach($comic->toArray() as $header => $value)
-                                @if( in_array($header,$headersToShow))
-                                    <td>{{ $value }}</td>
-                                @endif
-                            @endforeach
-
-                            <td>{{ link_to_route('comics.edit', 'Edit', array($comic->id), array('class' => 'btn btn-info')) }}</td>
-                            <td>
-                                @if($comic->trashed())
-                                    {{ Form::open(array('method' => 'RESTORE', 'route' => array('comics.update', $comic->id))) }}
-                                    {{ Form::submit('Restore', array('class' => 'btn')) }}
-                                    {{ Form::close() }}
-                                @else
-                                    {{ Form::open(array('method' => 'DELETE', 'route' => array('comics.destroy', $comic->id))) }}
-                                    {{ Form::submit('Delete', array('class' => 'btn btn-danger')) }}
-                                    {{ Form::close() }}
-                                @endif
-                            </td>
+                            <td>{{$comic->barcode}}</td>
+                            <td>{{$comic->title}} {{ link_to_route('comics.edit', 'Edit', array($comic->id), array('class' => 'btn btn-info')) }}</td>
+                            <td>{{$comic->number}}</td>
                             <td>
                                 <label for="clientSelectFor{{ $comic->id }}"><i class="fa fa-paperclip fa-2x"
                                                                                 data-client="{{  $comic->id }}"
@@ -91,6 +47,15 @@ $headersToShow = ['id', 'title', 'number', 'barcode'];
                                         </option>
                                     @endforeach
                                 </select>
+                            </td>
+                            <td>
+                                @if($comic->trashed())
+                                    {{ link_to_route('clients.update', 'Restore', array($client->id), array('class' => 'btn btn-info')) }}
+                                @else
+                                    {{ Form::open(array('method' => 'DELETE', 'route' => array('comics.destroy', $comic->id))) }}
+                                    {{ Form::submit('Delete', array('class' => 'btn btn-danger')) }}
+                                    {{ Form::close() }}
+                                @endif
                             </td>
                         </tr>
                         @endforeach
