@@ -5,6 +5,13 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+/**
+ * Class Comics
+ *
+ * @property-read \App\Clients $clients
+ *
+ * @package App
+ */
 class Comics extends Model
 {
     use SoftDeletes;
@@ -37,6 +44,15 @@ class Comics extends Model
     public function clients()
     {
         return $this->belongsToMany('App\Clients');
+    }
+
+
+    /**
+     * The clients that belong to the comic.
+     */
+    public function totals()
+    {
+        return $this->belongsToMany('App\ClientsComicsTotals');
     }
 
 

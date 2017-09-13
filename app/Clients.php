@@ -41,4 +41,13 @@ class Clients extends Model
     {
         return $this->belongsToMany('App\Comics');
     }
+
+
+    /**
+     * The clients that belong to the comic.
+     */
+    public function totals()
+    {
+        return $this->belongsToMany('App\ClientsComicsTotals');
+    }
 }

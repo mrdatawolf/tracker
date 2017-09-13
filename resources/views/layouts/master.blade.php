@@ -76,8 +76,9 @@
         }
 
         #home_image {
-            max-height: 2em;
-            max-width: 3em;
+            max-height: 5em;
+            max-width: 8em;
+            margin-bottom: 2em;
         }
 
         th, td {
@@ -95,6 +96,10 @@
         .trashed {
             font-weight: 300;
         }
+
+        .fa-stack {
+            margin-bottom: 1em;
+        }
     </style>
     @yield('style')
 </head>
@@ -102,13 +107,21 @@
 <div class="flex-center position-ref full-height">
     <div class="top-right links">
         <a href="{{ url('/') }}"><img id="home_image" src="/images/ncrp.jpg"></a>
-        <a href="{{ url('/clients') }}"><i class="fa fa-users" aria-hidden="true"></i></a>
-        <a href="{{ url('/comics') }}"><i class="fa fa-book" aria-hidden="true"></i></a>
-    <!--<a href="{{ url('/watchlists') }}"><i class="fa fa-binoculars" aria-hidden="true"></i></a>
-        <a href="{{ url('/orders') }}">Orders</a>
-        <a href="{{ url('/notes') }}">Notes</a>-->
-        <a href="{{ url('/groups') }}"><i class="fa fa-exchange" aria-hidden="true"></i></a>
-        <a href="{{ url('/comic_count') }}"><i class="fa fa-line-chart" aria-hidden="true"></i></a>
+        <a href="{{ url('/clients') }}"><i class="fa fa-users fa-4x" aria-hidden="true"></i></a>
+        <a href="{{ url('/comics') }}"><i class="fa fa-book fa-4x" aria-hidden="true"></i></a>
+        <a href="{{ url('/groups') }}"><i class="fa fa-exchange fa-4x" aria-hidden="true"></i></a>
+        <a href="{{ url('/comics/balancesheet') }}">
+            <span class="fa-stack fa-2x">
+            <i class="fa fa-book fa-stack-2x" aria-hidden="true"></i>
+            <i class="fa fa-balance-scale fa-inverse fa-stack-1x" aria-hidden="true"></i>
+            </span>
+        </a>
+        <a href="{{ url('/clients/balancesheet') }}">
+            <span class="fa-stack fa-2x">
+            <i class="fa fa-users fa-stack-2x" aria-hidden="true"></i>
+            <i class="fa fa-balance-scale fa-inverse fa-stack-1x" aria-hidden="true"></i>
+            </span>
+        </a>
     </div>
     <div class="container">
         @if (Session::has('message'))

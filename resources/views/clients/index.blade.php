@@ -1,7 +1,7 @@
 <?php
 $headersToShow = ['id', 'name', 'barcode'];
 ?>
-@extends('layouts.general')
+@extends('layouts.master')
 
 @section('main')
     <h1>Active Clients</h1>

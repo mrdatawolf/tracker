@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Clients;
+use App\ClientsComicsTotals;
 use App\Comics;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
@@ -104,34 +105,6 @@ class ClientController extends Controller
             ->withErrors($validation)
             ->with('message', 'There were validation errors.');
     }
-
-
-    /**
-     * Attaches the specified resource in storage to another resource in storage.
-     *
-     * @param Request $request
-     * @param int $clientId
-     * @param  int $comicId
-     *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
-    public function put(Request $request, $clientId, $comicId)
-    {
-        $client = Clients::whereId($clientId)->first();
-        $attachedIds = $client->comics()->whereId($comicId)->count();
-        switch ($attachedIds) {
-            case 0:
-                $client->comics()->attach([$comicId]);
-                $type = 'success';
-                $message = 'Comic was successfully attached to client!';
-                break;
-            default:
-                $type = 'error';
-                $message = 'Comic was already attached to client!';
-        }
-    
-        return Redirect::route('clients.index')->with($type, $message);
-    }
     
     /**
      * Remove the specified resource from storage.
@@ -143,5 +116,55 @@ class ClientController extends Controller
     {
         Clients::withTrashed()->find($id)->delete();
         return Redirect::route('clients.index')->with('success', 'Client was deleted');
+    }
+
+
+    /**
+     * Attaches the specified resource in storage to another resource in storage.
+     *
+     * @param Request $request
+     * @param int     $clientId
+     * @param  int    $comicId
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function put(Request $request, $clientId, $comicId)
+    {
+        $client      = Clients::whereId($clientId)->first();
+        $attachedIds = $client->comics()->whereId($comicId)->count();
+        switch ($attachedIds) {
+            case 0:
+                $client->comics()->attach([$comicId]);
+                $totals             = new ClientsComicsTotals();
+                $totals->clients_id = $clientId;
+                $totals->comics_id  = $comicId;
+                $totals->total      = 1;
+                $totals->save();
+                $type    = 'success';
+                $message = 'Comic was successfully attached to client!';
+                break;
+            default:
+                $type    = 'error';
+                $message = 'Comic was already attached to client!';
+        }
+
+        return Redirect::route('clients.index')->with($type, $message);
+    }
+
+
+    public function balanceSheet()
+    {
+        $data = Clients::select(['id', 'barcode', 'name'])->with('comics')->get()->toArray();
+        foreach ($data as $key => $client) {
+            $data[$key]['total']   = ClientsComicsTotals::where('clients_id', $client['id'])->count();
+            $data[$key]['subList'] = '';
+            $subList               = '';
+            foreach ($client['comics'] as $comic) {
+                $subList .= $comic['title'].', ';
+            }
+            $data[$key]['subList'] .= substr($subList, 0, -2);
+        }
+
+        return view('balancesheet', compact('data'));
     }
 }

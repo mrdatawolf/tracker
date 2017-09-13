@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Comics;
 use App\Clients;
+use App\ClientsComicsTotals;
+use App\Comics;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Redirect;
@@ -90,23 +91,42 @@ class ComicController extends Controller
             ->withErrors($validation)
             ->with('message', 'There were validation errors.');
     }
-    
+
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int $id
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function destroy($id)
+    {
+        Comics::withTrashed()->find($id)->delete();
+
+        return Redirect::route('comics.index')->with('success', 'Comic was deleted');
+    }
+
     /**
      * Attaches the specified resource in storage to another resource in storage.
      *
-     * @param Request $request
      * @param $comicId
      * @param $clientId
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function put(Request $request, $comicId, $clientId)
+    public function put($comicId, $clientId)
     {
         $comic = Comics::whereId($comicId)->first();
         $attachedIds = $comic->clients()->whereId($clientId)->count();
         switch ($attachedIds) {
             case 0:
                 $comic->clients()->attach([$clientId]);
+                $totals             = new ClientsComicsTotals();
+                $totals->clients_id = $clientId;
+                $totals->comics_id  = $comicId;
+                $totals->total      = 1;
+                $totals->save();
                 $type = 'success';
                 $message = 'Client was successfully attached to comic!';
                 break;
@@ -114,19 +134,24 @@ class ComicController extends Controller
                 $type = 'error';
                 $message = 'Client was already attached to comic!';
         }
-        
+
         return Redirect::route('comics.index')->with($type, $message);
     }
-    
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int $id
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
-    public function destroy($id)
+
+
+    public function balanceSheet()
     {
-        Comics::withTrashed()->find($id)->delete();
-        return Redirect::route('comics.index')->with('success', 'Comic was deleted');
+        $data = Comics::select(['id', 'barcode', 'title', 'number'])->with('clients')->get()->toArray();
+        foreach ($data as $key => $comic) {
+            $data[$key]['total']   = ClientsComicsTotals::where('comics_id', $comic['id'])->count();
+            $data[$key]['subList'] = '';
+            $subList               = '';
+            foreach ($comic['clients'] as $client) {
+                $subList .= $client['name'].', ';
+            }
+            $data[$key]['subList'] .= substr($subList, 0, -2);
+        }
+
+        return view('balancesheet', compact('data'));
     }
 }

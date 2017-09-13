@@ -1,7 +1,7 @@
 <?php
 $headersToShow = ['id', 'title', 'number', 'barcode'];
 ?>
-@extends('layouts.general')
+@extends('layouts.master')
 
 @section('main')
     <h1>Active Comics</h1>
@@ -32,8 +32,9 @@ $headersToShow = ['id', 'title', 'number', 'barcode'];
                                         break;
                                         case 'phone':
                                         $header = '<i class="fa fa-phone fa-2x" aria-hidden="true"></i>';
+                                        break;
                                         case 'number':
-                                        $header = '<i class="fa fa-bookmark-outline fa-2x" aria-hidden="true"></i>';
+                                        $header = '<i class="fa fa-bookmark fa-2x" aria-hidden="true"></i>';
                                         break;
                                     }
                                     echo '<th>'.$header.'</th>';
@@ -96,7 +97,7 @@ $headersToShow = ['id', 'title', 'number', 'barcode'];
                     </tbody>
         </table>
     @else
-        There are no clients
+        There are no comics
     @endif
 
 @stop
