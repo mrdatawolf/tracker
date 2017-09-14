@@ -6,7 +6,7 @@ $headersToShow = ['id', 'name', 'barcode'];
 @section('main')
     <h1>Active Clients</h1>
 
-    <p><i class="fa fa-plus" aria-hidden="true"></i>{{ link_to_route('clients.create', 'Add new client') }}</p>
+    <p class="addNew"><i class="fa fa-plus" aria-hidden="true"></i>{{ link_to_route('clients.create', 'Add new client') }}</p>
 
     @if ($clients->count())
         <table class="table table-striped table-bordered">
@@ -14,7 +14,7 @@ $headersToShow = ['id', 'name', 'barcode'];
                 @if($collNum === 0)
                     <thead>
                     <tr>
-                        <th><i class="fa fa-barcode fa-2x" aria-hidden="true"></i></th>
+                        <th><i class="fa fa-barcode fa-2x" title="barcode number" aria-hidden="true"></i></th>
                         <th><i class="fa fa-user fa-2x" aria-hidden="true"></i></th>
                         <th class="tools" colspan="2"><i class="fa fa-wrench fa-2x" aria-hidden="true"></i></th>
                     </tr>
@@ -67,21 +67,8 @@ $headersToShow = ['id', 'name', 'barcode'];
     @endif
 
 @stop
-@section('style')
-    <style>
-        html, body {
-            background-color: lightblue;
-        }
-
-        .addComicTo {
-
-        }
-    </style>
-@endsection
 @section('scriptFooter')
     <script>
-        $clientId = 0;
-        $comidId = 0;
         $(function () {
             $('.comicSelector').change(function () {
                 var selected = $(this).find('option:selected');

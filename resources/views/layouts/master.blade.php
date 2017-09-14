@@ -16,43 +16,58 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <!-- Styles -->
     <style>
-        html, body {
-            background-color: #fff;
+        body {
             color: #000000;
             font-family: 'Raleway', sans-serif;
             font-weight: bold;
             height: 100vh;
             margin: 0;
+            /*background: url(images/ncrp.jpg) no-repeat center center fixed;
+            -webkit-background-size: contain;
+            -moz-background-size: contain;
+            -o-background-size: contain;
+            background-size: contain;*/
+        }
+
+        html {
+            background-color: #fff;
+        }
+
+        a {
+            color: #000000;
+            font-weight: bold;
+        }
+
+        ul {
+            list-style-type: none;
+        }
+
+        th, td {
+            text-align: center;
         }
 
         .full-height {
             height: 100vh;
         }
-
         .flex-center {
             align-items: center;
             display: flex;
             justify-content: center;
         }
-
         .position-ref {
             position: relative;
         }
-
         .top-right {
             position: absolute;
             right: 10px;
             top: 18px;
         }
-
         .content {
             text-align: center;
         }
-
         .title {
             font-size: 84px;
         }
-
         .links > a {
             padding: 0 25px;
             font-size: 12px;
@@ -61,44 +76,30 @@
             text-decoration: none;
             text-transform: uppercase;
         }
-
-        a {
-            color: #000000;
-            font-weight: bold;
-        }
-
-        .m-b-md {
-            margin-bottom: 30px;
-        }
-
-        ul {
-            list-style-type: none;
-        }
-
         #home_image {
             max-height: 5em;
             max-width: 8em;
             margin-bottom: 2em;
         }
-
-        th, td {
-            text-align: center;
-        }
-
         .alert-error {
             background-color: red;
         }
-
         .alert-success {
             background-color: lawngreen;
         }
-
         .trashed {
             font-weight: 300;
         }
-
         .fa-stack {
             margin-bottom: 1em;
+        }
+
+        #subList a {
+            color: #aa0000;
+        }
+
+        .addNew {
+            color: green;
         }
     </style>
     @yield('style')

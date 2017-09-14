@@ -8,6 +8,22 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Groups extends Model
 {
     use SoftDeletes;
+
+    /**
+     * @var array
+     */
+    public static $rules = [];
+
+    /**
+     * @var array
+     */
+    protected $guarded = ['id'];
+
+    /**
+     * @var array
+     */
+    protected $fillable = ['barcode', 'title'];
+
     /**
      * The attributes that should be mutated to dates.
      *
@@ -27,7 +43,7 @@ class Groups extends Model
      */
     public function comics()
     {
-        return $this->belongsToMany('Comics');
+        return $this->belongsToMany('\App\Comics');
     }
 
 
@@ -36,7 +52,6 @@ class Groups extends Model
      */
     public function clients()
     {
-        return $this->belongsToMany('Clients');
+        return $this->belongsToMany('\App\Clients');
     }
-    
 }

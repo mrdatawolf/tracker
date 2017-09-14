@@ -14,7 +14,7 @@ class ComicsGroups extends Migration
     public function up()
     {
         Schema::create('comics_groups', function (Blueprint $table) {
-            $table->integer('clients_id');
+            $table->integer('groups_id');
             $table->integer('comics_id');
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP'));

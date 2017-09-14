@@ -7,10 +7,15 @@
                     <thead>
                     <tr>
                         <th><i class="fa fa-barcode fa-2x" aria-hidden="true"></i></th>
-                        <th><i class="fa fa-book fa-2x" aria-hidden="true"></i></th>
-                        <th><i class="fa fa-bookmark fa-2x" aria-hidden="true"></i></th>
+                        @if($subListTitle === 'Clients')
+                            <th><i class="fa fa-book fa-2x" aria-hidden="true"></i></th>
+                            <th><i class="fa fa-bookmark fa-2x" aria-hidden="true"></i></th>
+                        @else
+                            <th><i class="fa fa-user fa-2x" aria-hidden="true"></i></th>
+                        @endif
                         <th>Total reserved</th>
-                        <th>Reserved by</th>
+                        <th>{{ $subListTitle }} (click check to mark as fullfilled for client)
+                        </th>
                         <th class="tools" colspan="3"><i class="fa fa-wrench fa-2x" aria-hidden="true"></i></th>
                     </tr>
                     </thead>
@@ -19,9 +24,11 @@
                     <tr>
                         <td>{{ $value['barcode'] ?? 'n/a' }}</td>
                         <td>{{ $value['title'] ?? $value['name'] }}</td>
+                        @if($subListTitle === 'Clients')
                         <td>{{ $value['number'] ?? 'n/a' }}</td>
+                        @endif
                         <td>{{ $value['total'] }}</td>
-                        <td>{{ $value['subList'] }}</td>
+                        <td id="subList">{!! $value['subList'] !!}</td>
                         <td></td>
 
                     </tr>

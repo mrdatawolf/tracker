@@ -42,7 +42,6 @@ class Clients extends Model
         return $this->belongsToMany('App\Comics');
     }
 
-
     /**
      * The clients that belong to the comic.
      */
