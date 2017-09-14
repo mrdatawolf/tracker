@@ -17,8 +17,8 @@
     <!-- Styles -->
     <style>
         body {
-            color: #000000;
-            font-family: 'Raleway', sans-serif;
+            color: #000;
+            font-family: 'Tahoma', sans-serif;
             font-weight: bold;
             height: 100vh;
             margin: 0;
@@ -28,24 +28,19 @@
             -o-background-size: contain;
             background-size: contain;*/
         }
-
         html {
             background-color: #fff;
         }
-
         a {
-            color: #000000;
+            color: #000;
             font-weight: bold;
         }
-
         ul {
             list-style-type: none;
         }
-
         th, td {
             text-align: center;
         }
-
         .full-height {
             height: 100vh;
         }
@@ -57,10 +52,12 @@
         .position-ref {
             position: relative;
         }
-        .top-right {
-            position: absolute;
-            right: 10px;
-            top: 18px;
+
+        .top-menu {
+            background-color: #fff;
+            position: fixed;
+            right: .25em;
+            top: .25em;
         }
         .content {
             text-align: center;
@@ -78,8 +75,8 @@
         }
         #home_image {
             max-height: 5em;
-            max-width: 8em;
-            margin-bottom: 2em;
+            max-width: 9em;
+            align-content: center;
         }
         .alert-error {
             background-color: red;
@@ -106,7 +103,7 @@
 </head>
 <body>
 <div class="flex-center position-ref full-height">
-    <div class="top-right links">
+    <div class="top-menu links">
         <a href="{{ url('/') }}"><img id="home_image" src="/images/ncrp.jpg"></a>
         <a href="{{ url('/clients') }}"><i class="fa fa-users fa-4x" aria-hidden="true"></i></a>
         <a href="{{ url('/comics') }}"><i class="fa fa-book fa-4x" aria-hidden="true"></i></a>
@@ -120,6 +117,12 @@
         <a href="{{ url('/clients/balancesheet') }}">
             <span class="fa-stack fa-2x">
             <i class="fa fa-users fa-stack-2x" aria-hidden="true"></i>
+            <i class="fa fa-balance-scale fa-inverse fa-stack-1x" aria-hidden="true"></i>
+            </span>
+        </a>
+        <a href="{{ url('/groups/balancesheet') }}">
+            <span class="fa-stack fa-2x">
+            <i class="fa fa-exchange fa-stack-2x" aria-hidden="true"></i>
             <i class="fa fa-balance-scale fa-inverse fa-stack-1x" aria-hidden="true"></i>
             </span>
         </a>

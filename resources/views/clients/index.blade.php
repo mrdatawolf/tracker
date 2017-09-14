@@ -45,7 +45,7 @@ $headersToShow = ['id', 'name', 'barcode'];
                                 </option>
                                 @foreach($comics as $comic)
                                     <option value='{{ $comic->id }}' data-client="{{  $client->id }}">
-                                        {{ $comic->title }}
+                                        {{ $comic->title }}:{{ $comic->number }}
                                     </option>
                                 @endforeach
                             </select>

@@ -32,5 +32,9 @@
             {{ implode('', $errors->all('<li class="error">:message</li>')) }}
         </ul>
     @endif
-
 @stop
+@section('scriptFooter')
+    <script>
+        $('#title').focus();
+    </script>
+@endsection

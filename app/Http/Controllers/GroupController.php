@@ -157,4 +157,26 @@ class GroupController extends Controller
             return Redirect::back()->with('sucess', 'Comic was detached from group');
         }
     }
+    
+    public function balanceSheet()
+    {
+        $data = Groups::select(['id', 'barcode', 'title'])->with('comics')->get()->toArray();
+        foreach ($data as $key => $group) {
+            $groupCount = count($group['comics']);
+            if ($groupCount > 0) {
+                $data[$key]['total'] = $groupCount;
+                $data[$key]['subList'] = '';
+                $subList = '';
+                $subListTitle = 'Comics';
+                foreach ($group['comics'] as $comic) {
+                    $subList .= '<a href="/groups/detach/' . $group['id'] . '/' . $comic['id'] . '" title="Mark group fulfilled for comic"><i class="fa fa-check" aria-hidden="true"></i>&nbsp;' . $comic['title'] . '</a> | ';
+                }
+                $data[$key]['subList'] .= substr($subList, 0, -2);
+            } else {
+                unset($data[$key]);
+            }
+        }
+        
+        return view('balancesheet', compact('data', 'subListTitle'));
+    }
 }

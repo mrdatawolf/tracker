@@ -35,7 +35,7 @@
             position: relative;
         }
 
-        .top-right {
+        .top-menu {
             position: absolute;
             right: 10px;
             top: 18px;

@@ -38,3 +38,8 @@
     @endif
 
 @stop
+@section('scriptFooter')
+    <script>
+        $('#name').focus();
+    </script>
+@endsection

@@ -20,7 +20,7 @@ class ClientController extends Controller
     public function index()
     {
         $clients       = Clients::paginate(10);
-        $comics        = Comics::select('id', 'title')->get();
+        $comics = Comics::select('id', 'number', 'title')->get();
         $clientToComic = [];
 
         return view('clients.index', compact('clients', 'clientToComic', 'comics'));
