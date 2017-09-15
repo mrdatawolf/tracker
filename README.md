@@ -13,7 +13,7 @@ Tracker a simple comic - client tracker built on laravel 5.5
 * groups of comics need to be handled... need feedback here.
 * balance sheets should only show the most recent comic.
 * we should have a wishlist which is like a balance sheet but shows all before the most recent
-
+* 30 is the most we should have to display for 1 comic
 ## Getting Started
 
 pull this. run composer update.
