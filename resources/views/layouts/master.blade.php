@@ -30,6 +30,8 @@
         }
         html {
             background-color: #fff;
+            min-width: 1024px;
+            min-height: 700px;
         }
         a {
             color: #000;
@@ -74,14 +76,14 @@
             text-transform: uppercase;
         }
         #home_image {
-            max-height: 5em;
-            max-width: 9em;
-            align-content: center;
+            max-height: 4em;
+            vertical-align: top;
         }
         .alert-error {
             background-color: red;
         }
-        .alert-success {
+
+        .alert-success, .flash {
             background-color: lawngreen;
         }
         .trashed {
@@ -98,12 +100,24 @@
         .addNew {
             color: green;
         }
+
+        .alert {
+            position: absolute;
+            top: .25em;
+            left: .25em;
+        }
+
+        #menubar {
+            font-size: 6pt;
+            margin: .1em;
+            padding: .1em;
+        }
     </style>
     @yield('style')
 </head>
 <body>
 <div class="flex-center position-ref full-height">
-    <div class="top-menu links">
+    <div id="menubar" class="top-menu links">
         <a href="{{ url('/') }}"><img id="home_image" src="/images/ncrp.jpg"></a>
         <a href="{{ url('/clients') }}"><i class="fa fa-users fa-4x" aria-hidden="true"></i></a>
         <a href="{{ url('/comics') }}"><i class="fa fa-book fa-4x" aria-hidden="true"></i></a>
@@ -130,17 +144,17 @@
     <div class="container">
         @if (Session::has('message'))
             <div class="flash alert">
-                <p>{{ Session::get('message') }}</p>
+                <p>{{ Session::get('message') }}<i id="flash-off" class="alert-close fa fa-times-circle"></i></p>
             </div>
         @endif
         @if (\Session::has('success'))
             <div class="alert alert-success">
-                <p>{{ \Session::get('success') }}</p>
+                <p>{{ \Session::get('success') }}<i id="success-off" class="alert-close fa fa-times-circle"></i></p>
             </div><br/>
         @endif
         @if (\Session::has('error'))
             <div class="alert alert-error">
-                <p>{{ \Session::get('error') }}</p>
+                <p>{{ \Session::get('error') }}<i id="error-off" class="alert-close fa fa-times-circle"></i></p>
             </div><br/>
         @endif
 
