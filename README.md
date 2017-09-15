@@ -11,6 +11,8 @@ Tracker a simple comic - client tracker built on laravel 5.5
 * comics should only show clients the comic iscurrently not attached to.
 * there needs to be a place to set the number of copies a client wants for a given comic (defaults to 1)
 * groups of comics need to be handled... need feedback here.
+* balance sheets should only show the most recent comic.
+* we should have a wishlist which is like a balance sheet but shows all before the most recent
 
 ## Getting Started
 

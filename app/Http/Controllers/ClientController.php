@@ -207,7 +207,7 @@ class ClientController extends Controller
             $subList               = '';
             $subListTitle          = 'Comics';
             foreach ($client['comics'] as $comic) {
-                $subList .= '<a href="/clients/detach/'.$client['id'].'/'.$comic['id'].'" title="Mark comic fulfilled for client"><i class="fa fa-check" aria-hidden="true"></i>&nbsp;'.$comic['title'].'</a> | ';
+                $subList .= '<a href="/clients/detach/'.$client['id'].'/'.$comic['id'].'" title="Mark comic fulfilled for client"><i class="fa fa-check" aria-hidden="true"></i>&nbsp;'.$comic['title'].':'.$comic['number'].'</a> | ';
             }
             $data[$key]['subList'] .= substr($subList, 0, -2);
         }
