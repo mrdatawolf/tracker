@@ -58,7 +58,6 @@ class ComicController extends Controller
             ->with('message', 'There were validation errors.');
     }
 
-
     /**
      * Display the specified resource.
      *
@@ -106,8 +105,7 @@ class ComicController extends Controller
             ->withErrors($validation)
             ->with('message', 'There were validation errors.');
     }
-
-
+    
     /**
      * Remove the specified resource from storage.
      *
@@ -136,28 +134,19 @@ class ComicController extends Controller
         $comic->clients()->attach([$clientId]);
 
         $this->alterComicTotal($comicId, $clientId, 1);
-
-        $type    = 'success';
-        $message = 'Client was successfully attached to comic!';
-
-        return Redirect::route('comics.index')->with($type, $message);
+    
+        return Redirect::back()->with('success', 'Client was successfully attached to comic!');
     }
-
 
     public function detach($comicId, $clientId)
     {
         $comic = Comics::whereId($comicId)->first();
-        if ($comic->clients()->detach([$clientId]) > 1) {
-
-            return Redirect::back()->with('error', 'Client failed to detach from comic');
-        } else {
-            $this->alterComicTotal($comicId, $clientId, -1);
-
-            return Redirect::back()->with('success', 'Client was detached from comic');
-        }
+        ClientsComicsTotals::where(['comics_id' => $comicId, 'clients_id' => $clientId])->forceDelete();
+        $comic->clients()->detach([$clientId]);
+    
+        return Redirect::back()->with('success', 'Client was detached from comic');
     }
-
-
+    
     /**
      * @param $comicId
      * @param $clientId
@@ -170,30 +159,29 @@ class ComicController extends Controller
         $ccts = ClientsComicsTotals::where(['comics_id' => $comicId, 'clients_id' => $clientId]);
         switch ($ccts->count()) {
             case 0:
+                if ($adjustment > 0) {
                     $cct             = new ClientsComicsTotals();
                     $cct->clients_id = $clientId;
                     $cct->comics_id  = $comicId;
                     $cct->total      += $adjustment;
-                    if ($cct->total < 1) {
-                        $cct->forceDelete();
-                    } else {
-                        $cct->save();
-                    }
-                break;
-            case 1:
-                $cct        = $ccts->first();
-                $cct->total += $adjustment;
-                $cct->save();
+                    $cct->save();
+                }
                 break;
             default:
-
-                return false;
+                foreach ($ccts as $cct) {
+                    $cct->total += $adjustment;
+                    if ($cct->total > 0) {
+                        $cct->save();
+                    } else {
+                        $cct->forceDelete();
+                    }
+                }
+                break;
         }
 
         return true;
     }
-
-
+    
     public function balanceSheet()
     {
         $balanceTitle = 'Comic Balance';

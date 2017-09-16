@@ -14,7 +14,7 @@
                         @else
                             <th><i class="fa fa-user fa-2x" aria-hidden="true"></i></th>
                         @endif
-                        <th>Total reserved</th>
+                        <th>Total waiting reserves</th>
                         <th>{{ $subListTitle }} (click check to mark as fullfilled for client)
                         </th>
                         <th class="tools" colspan="3"><i class="fa fa-wrench fa-2x" aria-hidden="true"></i></th>

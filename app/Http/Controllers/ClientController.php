@@ -117,8 +117,7 @@ class ClientController extends Controller
         Clients::withTrashed()->find($id)->delete();
         return Redirect::route('clients.index')->with('success', 'Client was deleted');
     }
-
-
+    
     /**
      * Attaches the specified resource in storage to another resource in storage.
      *
@@ -128,32 +127,25 @@ class ClientController extends Controller
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function put(Request $request, $clientId, $comicId)
+    public function put($clientId, $comicId)
     {
         $client      = Clients::whereId($clientId)->first();
-        $attachedIds = $client->comics()->whereId($comicId)->count();
         $client->comics()->attach([$comicId]);
+    
         $this->alterComicTotal($clientId, $comicId, 1);
-        $type    = 'success';
-        $message = 'Comic was successfully attached to client!';
-
-        return Redirect::route('clients.index')->with($type, $message);
+    
+        return Redirect::back()->with('success', 'Comic was successfully attached to client!');
     }
-
-
+    
     public function detach($clientId, $comicId)
     {
         $client = Clients::whereId($clientId)->first();
-        if ($client->comics()->detach([$comicId]) > 1) {
-            return Redirect::back()->with('error', 'Comic failed to detach from client');
-        } else {
-            $this->alterComicTotal($clientId, $comicId, -1);
-
-            return Redirect::back()->with('sucess', 'Comic was detached from client');
-        }
+        ClientsComicsTotals::where(['comics_id' => $comicId, 'clients_id' => $clientId])->forceDelete();
+        $client->comics()->detach([$comicId]);
+    
+        return Redirect::back()->with('success', 'Comic was detached from client');
     }
-
-
+    
     /**
      * @param $clientId
      * @param $comicId
@@ -166,44 +158,67 @@ class ClientController extends Controller
         $ccts = ClientsComicsTotals::where(['comics_id' => $comicId, 'clients_id' => $clientId]);
         switch ($ccts->count()) {
             case 0:
-                $cct             = new ClientsComicsTotals();
-                $cct->clients_id = $clientId;
-                $cct->comics_id  = $comicId;
-                $cct->total      += $adjustment;
-                if ($cct->total < 1) {
-                    $cct->delete();
-                } else {
+                if ($adjustment > 0) {
+                    $cct = new ClientsComicsTotals();
+                    $cct->clients_id = $clientId;
+                    $cct->comics_id = $comicId;
+                    $cct->total += $adjustment;
                     $cct->save();
                 }
                 break;
-            case 1:
-                $cct        = $ccts->first();
-                $cct->total += $adjustment;
-                $cct->save();
-                break;
             default:
-
-                return false;
+                foreach ($ccts as $cct) {
+                    $cct->total += $adjustment;
+                    if ($cct->total > 0) {
+                        $cct->save();
+                    } else {
+                        $cct->forceDelete();
+                    }
+                }
+                break;
         }
-
+    
         return true;
     }
 
     public function balanceSheet()
     {
         $balanceTitle = 'Client Balance';
-        $data         = Clients::select(['id', 'barcode', 'name'])->with('comics')->get()->toArray();
+        $data = Clients::select(['id', 'barcode', 'name'])->with('comics')->get()->toArray();
         foreach ($data as $key => $client) {
-            $data[$key]['total']   = ClientsComicsTotals::where('clients_id', $client['id'])->count();
+            $data[$key]['total'] = ClientsComicsTotals::where('clients_id', $client['id'])->count();
             $data[$key]['subList'] = '';
-            $subList               = '';
-            $subListTitle          = 'Comics';
+            $subList = '';
+            $subListTitle = 'Comics';
             foreach ($client['comics'] as $comic) {
-                $subList .= '<a href="/clients/detach/'.$client['id'].'/'.$comic['id'].'" title="Mark comic fulfilled for client"><i class="fa fa-check" aria-hidden="true"></i>&nbsp;'.$comic['title'].':'.$comic['number'].'</a> | ';
+                $subList .= '<a href="/clients/detach/' . $client['id'] . '/' . $comic['id'] . '" title="Mark comic fulfilled for client"><i class="fa fa-check" aria-hidden="true"></i>&nbsp;' . $comic['title'] . ':' . $comic['number'] . '</a> | ';
             }
             $data[$key]['subList'] .= substr($subList, 0, -2);
         }
-
+    
         return view('balancesheet', compact('data', 'subListTitle', 'balanceTitle'));
     }
+    
+    /* public function balanceSheet()
+     {
+         $balanceTitle = 'Client Balance';
+         $data         = Clients::select(['id', 'barcode', 'name'])->with('comics')->get()->toArray();
+         foreach ($data as $key => $client) {
+             $clientCount = ClientsComicsTotals::where('clients_id', $client['id'])->count();
+             if ($clientCount > 0) {
+                 $data[$key]['total']   = $clientCount;
+                 $data[$key]['subList'] = '';
+                 $subList               = '';
+                 $subListTitle          = 'Comics';
+                 foreach ($client['comics'] as $comic) {
+                     $subList .= '<a href="/clients/detach/'.$client['id'].'/'.$comic['id'].'" title="Mark comic fulfilled for client"><i class="fa fa-check" aria-hidden="true"></i>&nbsp;'.$client['name'].'</a> | ';
+                 }
+                 $data[$key]['subList'] .= substr($subList, 0, -2);
+             } else {
+                 unset($data[$key]);
+             }
+         }
+         
+         return view('balancesheet', compact('data', 'subListTitle', 'balanceTitle'));
+     }*/
 }

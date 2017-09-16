@@ -35,14 +35,14 @@ $headersToShow = ['id', 'title', 'number', 'barcode'];
                             <td>{{$comic->number}}</td>
                             <td>
                                 <label for="clientSelectFor{{ $comic->id }}"><i class="fa fa-paperclip fa-2x"
-                                                                                data-client="{{  $comic->id }}"
+                                                                                data-comic="{{  $comic->id }}"
                                                                                 aria-hidden="true"></i></label>
                                 <select id="clientSelectFor{{ $comic->id }}" class="clientSelector">
-                                    <option value='0' data-client="{{  $comic->id }}">
+                                    <option value='0' data-comic="{{  $comic->id }}">
                                         &nbsp;&nbsp;
                                     </option>
                                     @foreach($clients as $client)
-                                        <option value='{{ $client->id }}' data-client="{{  $comic->id }}">
+                                        <option value='{{ $client->id }}' data-comic="{{  $comic->id }}">
                                             {{ $client->name }}
                                         </option>
                                     @endforeach
@@ -71,8 +71,8 @@ $headersToShow = ['id', 'title', 'number', 'barcode'];
         $(function () {
             $('.clientSelector').change(function () {
                 var selected = $(this).find('option:selected');
-                var clientId = selected.data('client');
-                var comicId = parseInt($(this).val());
+                var comicId = selected.data('comic');
+                var clientId = parseInt($(this).val());
 
                 if (comicId === 0) {
                     $('#addComicTo' + clientId).attr("disabled", "disabled").hide();
