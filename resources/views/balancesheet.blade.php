@@ -1,5 +1,6 @@
 @extends('layouts.master')
 @section('main')
+    <h1>{{  $balanceTitle }}</h1>
     @if (count($data) > 0)
         <table class="table table-striped table-bordered">
             @foreach ($data as $collNum => $value)

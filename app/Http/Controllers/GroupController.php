@@ -160,7 +160,8 @@ class GroupController extends Controller
     
     public function balanceSheet()
     {
-        $data = Groups::select(['id', 'barcode', 'title'])->with('comics')->get()->toArray();
+        $balanceTitle = 'Group balance';
+        $data         = Groups::select(['id', 'barcode', 'title'])->with('comics')->get()->toArray();
         foreach ($data as $key => $group) {
             $groupCount = count($group['comics']);
             if ($groupCount > 0) {
@@ -176,7 +177,7 @@ class GroupController extends Controller
                 unset($data[$key]);
             }
         }
-        
-        return view('balancesheet', compact('data', 'subListTitle'));
+
+        return view('balancesheet', compact('data', 'subListTitle', 'balanceTitle'));
     }
 }

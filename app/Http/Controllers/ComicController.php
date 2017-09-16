@@ -57,6 +57,21 @@ class ComicController extends Controller
             ->withErrors($validation)
             ->with('message', 'There were validation errors.');
     }
+
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int $id
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function show($id)
+    {
+        $comic = Comics::withTrashed()->find($id);
+
+        return view('comics.show', compact('comic'));
+    }
     
     /**
      * Show the form for editing the specified resource.
@@ -118,18 +133,12 @@ class ComicController extends Controller
     public function put($comicId, $clientId)
     {
         $comic = Comics::whereId($comicId)->first();
-        $attachedIds = $comic->clients()->whereId($clientId)->count();
-        switch ($attachedIds) {
-            case 0:
-                $comic->clients()->attach([$clientId]);
-                $this->alterComicTotal($comicId, $clientId, 1);
-                $type = 'success';
-                $message = 'Client was successfully attached to comic!';
-                break;
-            default:
-                $type = 'error';
-                $message = 'Client was already attached to comic!';
-        }
+        $comic->clients()->attach([$clientId]);
+
+        $this->alterComicTotal($comicId, $clientId, 1);
+
+        $type    = 'success';
+        $message = 'Client was successfully attached to comic!';
 
         return Redirect::route('comics.index')->with($type, $message);
     }
@@ -139,6 +148,7 @@ class ComicController extends Controller
     {
         $comic = Comics::whereId($comicId)->first();
         if ($comic->clients()->detach([$clientId]) > 1) {
+
             return Redirect::back()->with('error', 'Client failed to detach from comic');
         } else {
             $this->alterComicTotal($comicId, $clientId, -1);
@@ -160,17 +170,15 @@ class ComicController extends Controller
         $ccts = ClientsComicsTotals::where(['comics_id' => $comicId, 'clients_id' => $clientId]);
         switch ($ccts->count()) {
             case 0:
-                if ($adjustment > 0) {
                     $cct             = new ClientsComicsTotals();
                     $cct->clients_id = $clientId;
                     $cct->comics_id  = $comicId;
                     $cct->total      += $adjustment;
                     if ($cct->total < 1) {
-                        $cct->delete();
+                        $cct->forceDelete();
                     } else {
                         $cct->save();
                     }
-                }
                 break;
             case 1:
                 $cct        = $ccts->first();
@@ -188,7 +196,8 @@ class ComicController extends Controller
 
     public function balanceSheet()
     {
-        $data = Comics::select(['id', 'barcode', 'title', 'number'])->with('clients')->get()->toArray();
+        $balanceTitle = 'Comic Balance';
+        $data         = Comics::select(['id', 'barcode', 'title', 'number'])->with('clients')->get()->toArray();
         foreach ($data as $key => $comic) {
             $clientCount = ClientsComicsTotals::where('comics_id', $comic['id'])->count();
             if ($clientCount > 0) {
@@ -205,6 +214,6 @@ class ComicController extends Controller
             }
         }
 
-        return view('balancesheet', compact('data', 'subListTitle'));
+        return view('balancesheet', compact('data', 'subListTitle', 'balanceTitle'));
     }
 }

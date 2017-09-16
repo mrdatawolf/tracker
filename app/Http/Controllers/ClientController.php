@@ -20,7 +20,7 @@ class ClientController extends Controller
     public function index()
     {
         $clients       = Clients::paginate(10);
-        $comics = Comics::select('id', 'number', 'title')->get();
+        $comics        = Comics::select('id', 'number', 'title')->orderBy('title')->orderBy('number')->get();
         $clientToComic = [];
 
         return view('clients.index', compact('clients', 'clientToComic', 'comics'));
@@ -132,17 +132,10 @@ class ClientController extends Controller
     {
         $client      = Clients::whereId($clientId)->first();
         $attachedIds = $client->comics()->whereId($comicId)->count();
-        switch ($attachedIds) {
-            case 0:
-                $client->comics()->attach([$comicId]);
-                $this->alterComicTotal($clientId, $comicId, 1);
-                $type    = 'success';
-                $message = 'Comic was successfully attached to client!';
-                break;
-            default:
-                $type    = 'error';
-                $message = 'Comic was already attached to client!';
-        }
+        $client->comics()->attach([$comicId]);
+        $this->alterComicTotal($clientId, $comicId, 1);
+        $type    = 'success';
+        $message = 'Comic was successfully attached to client!';
 
         return Redirect::route('clients.index')->with($type, $message);
     }
@@ -173,16 +166,14 @@ class ClientController extends Controller
         $ccts = ClientsComicsTotals::where(['comics_id' => $comicId, 'clients_id' => $clientId]);
         switch ($ccts->count()) {
             case 0:
-                if ($adjustment > 0) {
-                    $cct             = new ClientsComicsTotals();
-                    $cct->clients_id = $clientId;
-                    $cct->comics_id  = $comicId;
-                    $cct->total      += $adjustment;
-                    if ($cct->total < 1) {
-                        $cct->delete();
-                    } else {
-                        $cct->save();
-                    }
+                $cct             = new ClientsComicsTotals();
+                $cct->clients_id = $clientId;
+                $cct->comics_id  = $comicId;
+                $cct->total      += $adjustment;
+                if ($cct->total < 1) {
+                    $cct->delete();
+                } else {
+                    $cct->save();
                 }
                 break;
             case 1:
@@ -200,7 +191,8 @@ class ClientController extends Controller
 
     public function balanceSheet()
     {
-        $data = Clients::select(['id', 'barcode', 'name'])->with('comics')->get()->toArray();
+        $balanceTitle = 'Client Balance';
+        $data         = Clients::select(['id', 'barcode', 'name'])->with('comics')->get()->toArray();
         foreach ($data as $key => $client) {
             $data[$key]['total']   = ClientsComicsTotals::where('clients_id', $client['id'])->count();
             $data[$key]['subList'] = '';
@@ -212,6 +204,6 @@ class ClientController extends Controller
             $data[$key]['subList'] .= substr($subList, 0, -2);
         }
 
-        return view('balancesheet', compact('data', 'subListTitle'));
+        return view('balancesheet', compact('data', 'subListTitle', 'balanceTitle'));
     }
 }
