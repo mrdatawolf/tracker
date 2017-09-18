@@ -49,14 +49,22 @@ class ClientController extends Controller
         
         if ($validation->passes()) {
             Clients::create($input);
-            
-            return Redirect::route('clients.index');
+    
+            return Redirect::back();
+        } else {
+            $returnMessage = '';
+            foreach ($validation->messages()->getMessages() as $name => $messageArray) {
+                $returnMessage .= $name . ': ';
+                foreach ($messageArray as $message) {
+                    $returnMessage .= $message;
+                }
+            }
         }
-        
         return Redirect::route('clients.create')
             ->withInput()
             ->withErrors($validation)
-            ->with('message', 'There were validation errors.');
+            ->with('error', 'There were validation errors.')
+            ->with('message', $returnMessage);
     }
     
     /**
@@ -103,7 +111,7 @@ class ClientController extends Controller
         return Redirect::route('clients.edit', $id)
             ->withInput()
             ->withErrors($validation)
-            ->with('message', 'There were validation errors.');
+            ->with('error', 'There were validation errors.');
     }
     
     /**
@@ -180,7 +188,10 @@ class ClientController extends Controller
     
         return true;
     }
-
+    
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function balanceSheet()
     {
         $balanceTitle = 'Client Balance';
@@ -198,27 +209,4 @@ class ClientController extends Controller
     
         return view('balancesheet', compact('data', 'subListTitle', 'balanceTitle'));
     }
-    
-    /* public function balanceSheet()
-     {
-         $balanceTitle = 'Client Balance';
-         $data         = Clients::select(['id', 'barcode', 'name'])->with('comics')->get()->toArray();
-         foreach ($data as $key => $client) {
-             $clientCount = ClientsComicsTotals::where('clients_id', $client['id'])->count();
-             if ($clientCount > 0) {
-                 $data[$key]['total']   = $clientCount;
-                 $data[$key]['subList'] = '';
-                 $subList               = '';
-                 $subListTitle          = 'Comics';
-                 foreach ($client['comics'] as $comic) {
-                     $subList .= '<a href="/clients/detach/'.$client['id'].'/'.$comic['id'].'" title="Mark comic fulfilled for client"><i class="fa fa-check" aria-hidden="true"></i>&nbsp;'.$client['name'].'</a> | ';
-                 }
-                 $data[$key]['subList'] .= substr($subList, 0, -2);
-             } else {
-                 unset($data[$key]);
-             }
-         }
-         
-         return view('balancesheet', compact('data', 'subListTitle', 'balanceTitle'));
-     }*/
 }

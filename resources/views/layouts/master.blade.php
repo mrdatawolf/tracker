@@ -17,6 +17,7 @@
     <!-- Styles -->
     <style>
         body {
+            background-color: #eeeeee;
             color: #000;
             font-family: 'Tahoma', sans-serif;
             font-weight: bold;
@@ -29,7 +30,6 @@
             background-size: contain;*/
         }
         html {
-            background-color: #fff;
             min-width: 1024px;
             min-height: 700px;
         }
@@ -44,7 +44,7 @@
             text-align: center;
         }
         .full-height {
-            height: 100vh;
+            min-height: 700px;
         }
         .flex-center {
             align-items: center;
@@ -79,11 +79,23 @@
             max-height: 4em;
             vertical-align: top;
         }
+
+        .alert {
+            position: absolute;
+            left: .25em;
+        }
         .alert-error {
+            top: 1.25em;
             background-color: red;
         }
 
-        .alert-success, .flash {
+        .alert-success {
+            top: 3.5em;
+            background-color: lawngreen;
+        }
+
+        .flash {
+            top: 5.75em;
             background-color: lawngreen;
         }
         .trashed {
@@ -101,12 +113,6 @@
             color: green;
         }
 
-        .alert {
-            position: absolute;
-            top: .25em;
-            left: .25em;
-        }
-
         #menubar {
             font-size: 6pt;
             margin: .1em;
@@ -118,7 +124,7 @@
 <body>
 <div class="flex-center position-ref full-height">
     <div id="menubar" class="top-menu links">
-        <a href="{{ url('/') }}"><img id="home_image" src="/images/ncrp.jpg"></a>
+        <a href="{{ url('/') }}"><img id="home_image" title="home" src="/images/ncrp.jpg"></a>
         <a href="{{ url('/clients') }}"><i class="fa fa-users fa-4x" aria-hidden="true"></i></a>
         <a href="{{ url('/comics') }}"><i class="fa fa-book fa-4x" aria-hidden="true"></i></a>
         <a href="{{ url('/groups') }}"><i class="fa fa-exchange fa-4x" aria-hidden="true"></i></a>
@@ -131,6 +137,12 @@
         <a href="{{ url('/comics/balancesheet') }}">
             <span class="fa-stack fa-2x">
             <i class="fa fa-book fa-stack-2x" aria-hidden="true"></i>
+            <i class="fa fa-balance-scale fa-inverse fa-stack-1x" aria-hidden="true"></i>
+            </span>
+        </a>
+        <a href="{{ url('/comics/wishlist') }}">
+            <span class="fa-stack fa-2x">
+            <i class="fa fa-leaf fa-stack-2x" aria-hidden="true"></i>
             <i class="fa fa-balance-scale fa-inverse fa-stack-1x" aria-hidden="true"></i>
             </span>
         </a>
@@ -162,6 +174,11 @@
     </div>
 </div>
 
+<script>
+    $('.alert-close').click(function () {
+        $(this).parent().parent().fadeOut();
+    });
+</script>
 @yield('scriptFooter')
 </body>
 

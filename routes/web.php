@@ -14,6 +14,7 @@ Route::any('comics/detach/{comicid}/{clientid}', array('as' => 'comics.detach', 
 Route::any('groups/detach/{groupId}/{comicid}', array('as' => 'groups.detach', 'uses' => 'GroupController@detach'));
 
 Route::any('comics/balancesheet', array('as' => 'comics.balancesheet', 'uses' => 'ComicController@balanceSheet'));
+Route::any('comics/wishlist', array('as' => 'comics.wishlist', 'uses' => 'ComicController@wishlist'));
 Route::any('clients/balancesheet', array('as' => 'clients.balancesheet', 'uses' => 'ClientController@balanceSheet'));
 Route::any('groups/balancesheet', array('as' => 'groups.balancesheet', 'uses' => 'GroupController@balanceSheet'));
 
@@ -23,4 +24,3 @@ Route::resource('groups', 'GroupController');
 Route::resource('metadata', 'MetadataController');
 Route::resource('notes', 'NoteController');
 Route::resource('orders', 'OrderController');
-Route::resource('watchlists', 'WatchlistController');

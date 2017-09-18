@@ -5,7 +5,7 @@ Tracker a simple comic - client tracker built on laravel 5.5
 ## Todos
 
 - [X] ~~In balancesheets when you detach a client from a comic the totals table is not updated~~
-- [ ] the alert system needs a close button
+- [X] the alert system needs a close button
 - [ ] the system should work corectly in a 1024x700 screen
 - [ ] clients should only show comics the client is not attached to.
 - [ ] comics should only show clients the comic iscurrently not attached to.

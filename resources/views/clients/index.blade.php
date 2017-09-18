@@ -21,7 +21,7 @@ $headersToShow = ['id', 'name', 'barcode'];
                     </thead>
                     <tfoot>
                     <tr>
-                        <td colspan="4">
+                        <td colspan="5">
                             {{ $clients->links() }}
                         </td>
                     </tr>

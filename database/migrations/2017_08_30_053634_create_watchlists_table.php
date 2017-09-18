@@ -13,7 +13,7 @@ class CreateWatchlistsTable extends Migration
      */
     public function up()
     {
-        Schema::create('watchlists', function (Blueprint $table) {
+        Schema::create('wishlists', function (Blueprint $table) {
             $table->integer('comics_id');
             $table->integer('clients_id');
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
@@ -29,6 +29,6 @@ class CreateWatchlistsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('watchlists');
+        Schema::dropIfExists('wishlists');
     }
 }

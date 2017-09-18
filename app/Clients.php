@@ -13,8 +13,7 @@ class Clients extends Model
      * @var array
      */
     public static $rules = [
-        'name'  => 'required|min:5',
-        'email' => 'email'
+        'name' => 'unique:Clients,name|required|min:5'
     ];
     
     /**
