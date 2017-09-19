@@ -138,10 +138,15 @@ class ClientController extends Controller
     public function put($clientId, $comicId)
     {
         $client      = Clients::whereId($clientId)->first();
-        $client->comics()->attach([$comicId]);
-    
-        $this->alterComicTotal($clientId, $comicId, 1);
-    
+        switch (ClientsComics::where('client_id', $clientId)->where('comic_id', $comicId)->count()) {
+            case 0:
+                $client->comics()->attach([$comicId]);
+                $this->alterComicTotal($clientId, $comicId, 1);
+                break;
+            default:
+                //just ignore it
+        }
+        
         return Redirect::back()->with('success', 'Comic was successfully attached to client!');
     }
     
@@ -201,8 +206,14 @@ class ClientController extends Controller
             $data[$key]['subList'] = '';
             $subList = '';
             $subListTitle = 'Comics';
+            $total = 0;
             foreach ($client['comics'] as $comic) {
-                $subList .= '<a href="/clients/detach/' . $client['id'] . '/' . $comic['id'] . '" title="Mark comic fulfilled for client"><i class="fa fa-check" aria-hidden="true"></i>&nbsp;' . $comic['title'] . ':' . $comic['number'] . '</a> | ';
+                $total++;
+                if ($total > 8) {
+                    $subList .= '</ul><ul class="subUl">';
+                    $total = 1;
+                }
+                $subList .= '<li class="subLi"><a href="/clients/detach/' . $client['id'] . '/' . $comic['id'] . '" title="Mark comic fulfilled for client"><i class="fa fa-check" aria-hidden="true"></i>&nbsp;' . $comic['title'] . ':' . $comic['number'] . '</a></li>';
             }
             $data[$key]['subList'] .= substr($subList, 0, -2);
         }

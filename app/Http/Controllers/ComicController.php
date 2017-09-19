@@ -140,10 +140,15 @@ class ComicController extends Controller
     public function put($comicId, $clientId)
     {
         $comic = Comics::whereId($comicId)->first();
-        $comic->clients()->attach([$clientId]);
-
-        $this->alterComicTotal($comicId, $clientId, 1);
-    
+        switch (ClientsComics::where('client_id', $clientId)->where('comic_id', $comicId)->count()) {
+            case 0:
+                $comic->clients()->attach([$clientId]);
+                $this->alterComicTotal($comicId, $clientId, 1);
+                break;
+            default:
+                //just ignore it
+        }
+        
         return Redirect::back()->with('success', 'Client was successfully attached to comic!');
     }
 
@@ -202,8 +207,14 @@ class ComicController extends Controller
                 $data[$key]['subList'] = '';
                 $subList = '';
                 $subListTitle = 'Clients';
+                $total = 0;
                 foreach ($comic['clients'] as $client) {
-                    $subList .= '<a href="/comics/detach/' . $comic['id'] . '/' . $client['id'] . '" title="Mark comic fulfilled for client"><i class="fa fa-check" aria-hidden="true"></i>&nbsp;' . $client['name'] . '</a> | ';
+                    $total++;
+                    if ($total > 6) {
+                        $subList .= '</ul><ul class="subUl">';
+                        $total = 1;
+                    }
+                    $subList .= '<li class="subLi"><a href="/comics/detach/' . $comic['id'] . '/' . $client['id'] . '" title="Mark comic fulfilled for client"><i class="fa fa-check" aria-hidden="true"></i>&nbsp;' . $client['name'] . '</a></li>';
                 }
                 $data[$key]['subList'] .= substr($subList, 0, -2);
             } else {
@@ -225,8 +236,14 @@ class ComicController extends Controller
                 $data[$key]['subList'] = '';
                 $subList               = '';
                 $subListTitle          = 'Clients';
+                $total = 0;
                 foreach ($comic['clients'] as $client) {
-                    $subList .= '<a href="/comics/detach/'.$comic['id'].'/'.$client['id'].'" title="Mark comic fulfilled for client"><i class="fa fa-check" aria-hidden="true"></i>&nbsp;'.$client['name'].'</a> | ';
+                    $total++;
+                    if ($total > 6) {
+                        $subList .= '</ul><ul class="subUl">';
+                        $total = 1;
+                    }
+                    $subList .= '<li class="subLi"><a href="/comics/detach/' . $comic['id'] . '/' . $client['id'] . '" title="Mark comic fulfilled for client"><i class="fa fa-check" aria-hidden="true"></i>&nbsp;' . $client['name'] . '</a></li>';
                 }
                 $data[$key]['subList'] .= substr($subList, 0, -2);
             } else {

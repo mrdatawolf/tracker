@@ -40,6 +40,11 @@
         ul {
             list-style-type: none;
         }
+
+        tr {
+            padding-bottom: .25em;
+            vertical-align: middle;
+        }
         th, td {
             text-align: center;
         }
@@ -105,7 +110,7 @@
             margin-bottom: 1em;
         }
 
-        #subList a {
+        .subList a {
             color: #aa0000;
         }
 
@@ -117,6 +122,21 @@
             font-size: 6pt;
             margin: .1em;
             padding: .1em;
+        }
+
+        .subUl {
+            display: -moz-box;
+            display: -webkit-box;
+            display: box;
+            max-width: 120em;
+        }
+
+        .subLi {
+            -moz-box-flex: 1;
+            -webkit-box-flex: 1;
+            box-flex: 1;
+            padding: .2em;
+            margin: .1em;
         }
     </style>
     @yield('style')
